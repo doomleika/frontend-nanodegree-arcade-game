@@ -1,12 +1,19 @@
+var app_global = this;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
+    obj = Object.create(Enemy.prototype);
+    
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    obj.sprite = 'images/enemy-bug.png';
+    return obj;
 };
+
+Enemy.number = 5;
 
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
@@ -24,13 +31,58 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
+var Player = function() {
+    obj = Object.create(Player.prototype);
+    obj.sprite = 'images/char-boy.png'
+    obj.gridpos = {
+        'x': 2,
+        'y': 5,
+        'x_max': 4,
+        'y_max': 5
+    };
+    return obj;
+}
+Player.prototype.update = function(dt) {
+
+};
+
+Player.prototype.render = function() {
+    var image = Resources.get(this.sprite);
+    ctx.drawImage(image, this.gridpos.x * 101, this.gridpos.y * 83);
+};
+
+Player.prototype.handleInput = function(key_name) {
+    if('left' === key_name) {
+        if (this.gridpos.x >= 1) {
+            this.gridpos.x -= 1;
+        }
+    } else if ('right' === key_name) {
+        if(this.gridpos.x < this.gridpos.x_max) {
+            this.gridpos.x += 1;
+        }
+    } else if ('up' === key_name) {
+        if(this.gridpos.y >= 1) {
+            this.gridpos.y -= 1;
+        }
+    } else if('down' === key_name) {
+        if(this.gridpos.y < this.gridpos.y_max) {
+            this.gridpos.y += 1;
+        }
+    } else {
+        console.log('Error!!! ' + key_name);
+    }
+};
 
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
 
-
+var allEnemies = [];
+for(var i = 0; i < Enemy.number; ++i) {
+    allEnemies.push(Enemy());
+}
+var player = Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
